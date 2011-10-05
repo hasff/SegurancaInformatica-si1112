@@ -7,7 +7,8 @@
 #netbeans ignore personal stuff 
 
 nbproject/private/
-dist/
+
+
 
 
 ## generic files to ignore
