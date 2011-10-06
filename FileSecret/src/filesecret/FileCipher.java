@@ -70,7 +70,12 @@ public class FileCipher {
             cryptogramOutStream.write(c.update(fileContentByteArr,0,readedBytes));
         cryptogramOutStream.write(c.doFinal());
         
-        //TODO: create metadata file
+        cryptogramOutStream.close();
+        fileInputStream.close();
+        
+        //Create metadata file and save it
+        FileSecretMetadata metadata = FileSecretMetadata.Create(ks, _X509Cerfificate);
+        metadata.Save(String.format("%s.secret.metadata", file_path));
         
         return result;
     }

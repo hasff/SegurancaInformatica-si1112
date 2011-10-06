@@ -2,13 +2,12 @@
 
 *.class
 
-
-
 #netbeans ignore personal stuff 
 
-nbproject/private/
-dist/
-
+FileSecret/nbproject/private/
+FileSecret/dist/
+Hasher/nbproject/private/
+Hasher/dist/
 
 ## generic files to ignore
 *~
