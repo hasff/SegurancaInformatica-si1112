@@ -1,5 +1,6 @@
 package filesecret;
 
+import filesecret.Utils.FileNominator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -42,7 +44,8 @@ public class FileCipher {
     // Cipher
     public FileCipherResult doCipher(String file_path) throws NoSuchAlgorithmException, 
             NoSuchPaddingException, FileNotFoundException, IOException, 
-            InvalidKeyException, IllegalBlockSizeException, BadPaddingException
+            InvalidKeyException, IllegalBlockSizeException, BadPaddingException, 
+            CertificateEncodingException
     {
         FileCipherResult result = null; 
         
@@ -56,7 +59,7 @@ public class FileCipher {
         
         //Create 'file to encrypt' cryptogram stream
         FileOutputStream cryptogramOutStream = 
-                new FileOutputStream(String.format("%s.secret", file_path));
+                new FileOutputStream(FileNominator.getEncryptedFileName(file_path));
         
         //Create and init cipher algorithm
         Cipher c = Cipher.getInstance(SYMMETRIC_CRYPTOGRAPHIC_ALGORITHM);
@@ -75,7 +78,7 @@ public class FileCipher {
         
         //Create metadata file and save it
         FileSecretMetadata metadata = FileSecretMetadata.Create(ks, _X509Cerfificate);
-        metadata.Save(String.format("%s.secret.metadata", file_path));
+        metadata.Save(FileNominator.getMetadataFileName(file_path));
         
         return result;
     }
