@@ -1,5 +1,8 @@
 package filesecret;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -12,7 +15,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
 
 public class FileSecretMetadata {
     private static final String ASSYMETRIC_CRYPTOGRAPHIC_ALGORITHM = "rsa";
@@ -58,26 +61,35 @@ public class FileSecretMetadata {
         throw new UnknownError();
     }
     
-    public static FileSecretMetadata Read(String metadataFilePath) {
-        //TODO: read from filesystem and create a FileSecretMetadata
+    public static FileSecretMetadata Read(String metadataFilePath) throws FileNotFoundException {
+        FileOutputStream metadaFileOutStream = new FileOutputStream(metadataFilePath);
+        
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void Save(String saveFilePath) {
-        //TODO: save to filesystem
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void Save(String saveFilePath) throws FileNotFoundException, IOException {
+        FileOutputStream metadataFileOutStream = new FileOutputStream(saveFilePath);
+        
+        byte[] secretKeyAlgorithmBytes = _secretKeyAlgorithm.getBytes();
+        int len = secretKeyAlgorithmBytes.length;
+        
+        metadataFileOutStream.write((len >>  24) & 0xFF);
+        metadataFileOutStream.write((len >>  16) & 0xFF);
+        metadataFileOutStream.write((len >>  8) & 0xFF);
+        metadataFileOutStream.write(len & 0xFF);
+        
+        metadataFileOutStream.write(secretKeyAlgorithmBytes);
     }
     
-    public SecretKey GetSecretKey(PrivateKey privateKey) 
-    {
+    public SecretKey GetSecretKey(PrivateKey privateKey) {
         try {
-            Cipher cipher = Cipher.getInstance(ASSYMETRIC_CRYPTOGRAPHIC_ALGORITHM);
             
+            Cipher cipher = Cipher.getInstance(ASSYMETRIC_CRYPTOGRAPHIC_ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            SecretKeyFactory kf = SecretKeyFactory.getInstance(_secretKeyAlgorithm);
+            
             byte[] secretKey = cipher.doFinal(_secretKeyCryptogram);
-           
-            return null;
+            
+            return new SecretKeySpec(secretKey, _secretKeyAlgorithm);
             
         } catch (IllegalBlockSizeException ex) {
             Logger.getLogger(FileSecretMetadata.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,8 +106,7 @@ public class FileSecretMetadata {
         throw new UnknownError();
     }
     
-    public X509Certificate GetPublicKeyCertificate()
-    {
+    public X509Certificate GetPublicKeyCertificate() {
         return _publicKeyCer;
     }
 }
