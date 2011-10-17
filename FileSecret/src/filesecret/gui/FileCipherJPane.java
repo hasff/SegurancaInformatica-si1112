@@ -23,7 +23,7 @@ public class FileCipherJPane extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
-        label_fileCipher = new JLabel("File Chipher");
+        label_fileCipher = new JLabel("File Cipher");
         add(label_fileCipher, BorderLayout.PAGE_START);
         
         btn_selectFileToCipher = new JButton("Select file");
@@ -32,7 +32,8 @@ public class FileCipherJPane extends JPanel {
         btn_selectFileToCipher.addMouseListener(new FileCipherJPaneMouserListener(this));
     }
 
-    public void setFileSecretUserInterfacetListener(FileSecretUserInterfacetListener fileSecretUserInterfacetListener) {
+    public void setFileSecretUserInterfacetListener(
+            FileSecretUserInterfacetListener fileSecretUserInterfacetListener) {
         _fileSecretUserInterfacetListener = fileSecretUserInterfacetListener;
     }
     

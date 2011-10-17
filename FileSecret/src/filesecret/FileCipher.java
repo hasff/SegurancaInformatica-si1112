@@ -32,8 +32,8 @@ public class FileCipher {
     {
         if (x509Certificate == null)
             throw new IllegalArgumentException("x509Certificate: can not be null!");
-        if (keyStore == null)
-            throw new IllegalArgumentException("KeyStore: can not be null!");
+        /*if (keyStore == null)
+            throw new IllegalArgumentException("KeyStore: can not be null!"); */
         
         this._X509Cerfificate = x509Certificate;
         this._KeyStore = keyStore;

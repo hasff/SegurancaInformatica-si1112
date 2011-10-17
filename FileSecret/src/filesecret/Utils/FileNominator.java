@@ -13,4 +13,12 @@ public class FileNominator {
                             String encryptedFileName) {
         return String.format("%s.metadata", encryptedFileName);
     }
+    
+    public static String getOriginalFileNameByEncryptedFileName(
+            String encryptedFileName)
+    {
+        return encryptedFileName.substring(
+                0,
+                encryptedFileName.length() - ".secret".length());
+    }
 }

@@ -1,12 +1,13 @@
 package filesecret.gui;
 
-import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import javax.swing.JFrame;
 
 public class FileSecretJFrame extends JFrame {
     private FileCipherJPane fileCipherJPane;
-    private final int WIDTH = 400;
-    private final int HEIGHT = 320;
+    private FileDecipherJPane  fileDecipherJPane;
+    private final int WIDTH = 200;
+    private final int HEIGHT = 160;
     
     public FileSecretJFrame() {
         super("File Secret");
@@ -15,17 +16,21 @@ public class FileSecretJFrame extends JFrame {
     
     private void initialize() {
         setSize(WIDTH, HEIGHT);
-        setLayout(new BorderLayout());
+        setLayout(new GridLayout(1,1));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        //Add components to JFrame
-        fileCipherJPane = new FileCipherJPane();
-        add(fileCipherJPane, BorderLayout.PAGE_START);
+        
+        fileCipherJPane =  new FileCipherJPane();
+        fileDecipherJPane = new FileDecipherJPane();
+        
+        add(fileCipherJPane);
+        add(fileDecipherJPane);
         
         setVisible(true);
     }
 
     public void setFileSecretUserInterfacetListener(FileSecretUserInterfacetListener fileSecretUserInterfacetListener) {
         fileCipherJPane.setFileSecretUserInterfacetListener(fileSecretUserInterfacetListener);
+        fileDecipherJPane.setFileSecretUserInterfacetListener(fileSecretUserInterfacetListener);
     }
 }

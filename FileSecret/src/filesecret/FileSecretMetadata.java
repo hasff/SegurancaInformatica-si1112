@@ -156,10 +156,10 @@ public class FileSecretMetadata {
         if(stream.read(intBytes) != intBytes.length)
             throw new IndexOutOfBoundsException("stream does not have enough bytes");
         
-        return intBytes[0] << 24 
-                | intBytes[1] << 16 
-                | intBytes[2] << 8
-                | intBytes[3];
+        return (intBytes[0] << 24) & 0x0FF
+                | (intBytes[1] << 16) & 0xFF
+                | (intBytes[2] << 8) & 0xFF
+                |  (intBytes[3]) & 0xFF;
     }
     
     private static byte[] readByteArray(FileInputStream stream) throws IOException {
