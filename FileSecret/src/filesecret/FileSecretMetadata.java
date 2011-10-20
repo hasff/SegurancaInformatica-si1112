@@ -23,7 +23,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class FileSecretMetadata {
     private static final String X509_CERT = "X.509";
-    private static final String ASSYMETRIC_CRYPTOGRAPHIC_ALGORITHM = "rsa";
     
     private final String _secretKeyAlgorithm;
     private final byte[] _secretKeyCryptogram;
@@ -45,7 +44,7 @@ public class FileSecretMetadata {
         try {
             
             PublicKey pK = publicKeyCer.getPublicKey();
-            Cipher cipher = Cipher.getInstance(ASSYMETRIC_CRYPTOGRAPHIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(pK.getAlgorithm());
             cipher.init(Cipher.ENCRYPT_MODE, pK);
             
             byte[] secreKeyCryptogram 
@@ -115,7 +114,7 @@ public class FileSecretMetadata {
     public SecretKey GetSecretKey(PrivateKey privateKey) {
         try {
             
-            Cipher cipher = Cipher.getInstance(ASSYMETRIC_CRYPTOGRAPHIC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(privateKey.getAlgorithm());
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             
             byte[] secretKey = cipher.doFinal(_secretKeyCryptogram);

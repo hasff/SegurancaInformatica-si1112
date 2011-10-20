@@ -1,4 +1,4 @@
-package filesecret.Utils;
+package filesecret.utils;
 
 public class FileNominator {
     public static String getMetadataFileName(String orignalFilename) {

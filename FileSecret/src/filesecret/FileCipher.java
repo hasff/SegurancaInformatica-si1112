@@ -1,6 +1,6 @@
 package filesecret;
 
-import filesecret.Utils.FileNominator;
+import filesecret.utils.FileNominator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
