@@ -1,16 +1,25 @@
 package filesecret;
 
-import filesecret.Utils.FileNominator;
+import filesecret.utils.FileNominator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertPathBuilder;
+import java.security.cert.CertPathBuilderException;
+import java.security.cert.CertStore;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.PKIXBuilderParameters;
+import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -23,22 +32,55 @@ public class FileCipher {
     private static final String SYMMETRIC_CRYPTOGRAPHIC_ALGORITHM = "DES";
     
     private final X509Certificate _X509Cerfificate;
-    private final KeyStore _KeyStore;
+    private final CertStore _intermediateCerts;
+    private final KeyStore _trustAnchors;
     
     public FileCipher(
             X509Certificate x509Certificate, 
-            KeyStore keyStore,
-            String pathCerts)
+            CertStore intermediateCerts,
+            KeyStore trustAnchors
+            ) throws Exception
     {
         if (x509Certificate == null)
             throw new IllegalArgumentException("x509Certificate: can not be null!");
-        /*if (keyStore == null)
-            throw new IllegalArgumentException("KeyStore: can not be null!"); */
         
-        this._X509Cerfificate = x509Certificate;
-        this._KeyStore = keyStore;
+        if (intermediateCerts == null)
+            throw new IllegalArgumentException("intermediateCerts: can not be null!");       
         
-        //TODO: validate 'x509Certificate' certificate
+        if (trustAnchors == null)
+            throw new IllegalArgumentException("trustAnchors: can not be null!");   
+        
+        _X509Cerfificate = x509Certificate;
+        _intermediateCerts = intermediateCerts;
+        _trustAnchors = trustAnchors;
+        
+        //Validate 'x509Certificate' certificate
+        X509CertSelector certToValidate = new X509CertSelector();
+        certToValidate.setCertificate(x509Certificate);
+        
+        _validateCertificate(certToValidate, _intermediateCerts, _trustAnchors);
+    }
+    
+    private void _validateCertificate(
+            X509CertSelector certToValidate, 
+            CertStore intermediateCerts,
+            KeyStore trustAnchors
+            ) throws Exception 
+    {
+        try {
+            PKIXBuilderParameters builderParams = new PKIXBuilderParameters(trustAnchors, certToValidate);
+            builderParams.addCertStore(intermediateCerts);
+            builderParams.setRevocationEnabled(false);
+
+            CertPathBuilder builder = CertPathBuilder.getInstance("PKIX");
+
+            // Throws CertPathBuilderException exception if is invalid.
+            builder.build(builderParams);
+            
+        } 
+        catch (Exception e) { 
+            throw e;
+        }
     }
     
     // Cipher
@@ -53,6 +95,7 @@ public class FileCipher {
         KeyGenerator keyGen = KeyGenerator.getInstance(SYMMETRIC_CRYPTOGRAPHIC_ALGORITHM);
         SecretKey ks = keyGen.generateKey();
         
+        /*
         //Create 'file to encrypt' stream reader
         File file = new File(file_path);
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -75,6 +118,12 @@ public class FileCipher {
         
         cryptogramOutStream.close();
         fileInputStream.close();
+        
+        */
+        
+        //Create ciphered file and save it.
+        FileSecretCipher cipher = FileSecretCipher.Create(ks, file_path);
+        cipher.Save(String.format("%s.secret", file_path));
         
         //Create metadata file and save it
         FileSecretMetadata metadata = FileSecretMetadata.Create(ks, _X509Cerfificate);
