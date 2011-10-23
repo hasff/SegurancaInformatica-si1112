@@ -1,6 +1,11 @@
 package filesecret;
 
 import filesecret.utils.FileNominator;
+<<<<<<< HEAD
+=======
+import java.io.File;
+import java.io.FileInputStream;
+>>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
