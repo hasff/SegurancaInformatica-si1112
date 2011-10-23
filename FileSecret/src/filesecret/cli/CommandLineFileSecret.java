@@ -2,34 +2,24 @@ package filesecret.cli;
 
 import filesecret.FileCipher;
 import filesecret.FileDecipher;
-<<<<<<< HEAD
 import java.io.File;
-import java.io.FileInputStream;
-import java.security.KeyStore;
 import java.security.cert.CertPathBuilderException;
 import java.security.cert.CertStore;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.security.cert.CollectionCertStoreParameters;
-import java.security.cert.X509Certificate;
 import java.util.LinkedList;
-=======
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
 
 public class CommandLineFileSecret {
     private static final String X509_CERT = "X509";
     private static final String CIPHER_OP  = "cipher";
     private static final String DECIPHER_OP = "decipher";
     
-<<<<<<< HEAD
     private static final String KEYSTORE_PASSWORD = "changeit";
     
-=======
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
     public static void Run(String args[]) {
         if(args.length == 0){
             notEnoughArgs();
@@ -53,7 +43,6 @@ public class CommandLineFileSecret {
         invalidArgs();
     }
     
-<<<<<<< HEAD
     /***
      * args[1] - X509 Certificate.
      * args[2] - Intermediate Certificates dir.
@@ -63,16 +52,11 @@ public class CommandLineFileSecret {
      */
     private static void cipherOp(String args[]) {
         if(args.length < 5){
-=======
-    private static void cipherOp(String args[]) {
-        if(args.length < 3){
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
             notEnoughArgs();
             return;
         }
         
         X509Certificate pubCert = getPublicKeyCertificate(args[1]);
-<<<<<<< HEAD
         CertStore certStore = getIntermediateCertificates(args[2]);
         KeyStore trustAnchors = getTrustAnchors(args[3]);
         
@@ -92,21 +76,14 @@ public class CommandLineFileSecret {
             handleException(e);
             return;
         }
-           
-=======
-        FileCipher fileCipher = new FileCipher(pubCert, null,null);
         
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
         long startTimeMillis = System.currentTimeMillis();
         
         System.out.print("File ciphering started... ");
         
         try {
-<<<<<<< HEAD
+
             String fileToCipher = args[4];
-=======
-            String fileToCipher = args[2];
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
             fileCipher.doCipher(fileToCipher);
         } catch (Exception e) {
             handleException(e);
@@ -117,14 +94,11 @@ public class CommandLineFileSecret {
         System.out.println(String.format("done. elapsed time = %d ms", (endtimeInMillis - startTimeMillis)));
     }
     
-<<<<<<< HEAD
     /***
      * args[1] - KeyStore.
      * args[2] - File to decipher.
      * @param args 
      */
-=======
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
     private static void decipherOp(String args[]) {
         if(args.length < 3){
             notEnoughArgs();
@@ -158,7 +132,6 @@ public class CommandLineFileSecret {
            return null;
        }
     }
-<<<<<<< HEAD
     
     private static CertStore getIntermediateCertificates(String intermediateCertsPath)
     {
@@ -201,8 +174,6 @@ public class CommandLineFileSecret {
         
         return trustAnchorsResult;
     }
-=======
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
         
     private static KeyStore getKeyStore(String keyStorePath) {
         try
@@ -231,10 +202,6 @@ public class CommandLineFileSecret {
     
     private static void handleException(Exception e)
     {
-<<<<<<< HEAD
         System.out.println("EXCEPTION : " + e.getMessage());
-=======
-        
->>>>>>> 1e0283804216afeb7cf453cb867521b9a2d98268
     }
 }
